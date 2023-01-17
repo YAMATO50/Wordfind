@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -152,10 +151,4 @@ func compareWordLists(mainWordList []string, preWordList []string) (newWordList 
 		newWordList = append(newWordList, word)
 	}
 	return
-}
-
-func logDatabaseBuilding(logString string) {
-	if verbose {
-		fmt.Println(logString)
-	}
 }

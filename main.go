@@ -59,3 +59,9 @@ func handleBuildDBFlag(args []string, argPos int) {
 		os.Exit(1)
 	}
 }
+
+func logActions(logString string) {
+	if verbose {
+		fmt.Println(logString)
+	}
+}
