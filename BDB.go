@@ -97,12 +97,13 @@ func characterizeBySpecialCharacters(wordLengthMap map[int][]string) Database {
 	for wordLength, wordList := range wordLengthMap {
 		var slw SameLengthWord
 		//slw := db.WordLength[wordLength]
+		slw.classifiedWords = make(map[uint32][]string)
 
 		for _, word := range wordList {
 
 			letterIndex := hashWord(word)
-			slw.classifiedWords = make(map[uint32][]string)
-			var specialLetterWordList []string
+
+			specialLetterWordList := slw.classifiedWords[letterIndex]
 
 			specialLetterWordList = append(specialLetterWordList, word)
 			slw.classifiedWords[letterIndex] = specialLetterWordList
