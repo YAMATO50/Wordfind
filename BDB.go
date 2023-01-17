@@ -24,6 +24,8 @@ func buildDatabase(newBuildDBfile string, newBuildDBfileExt string) {
 	preDatabase := characterizeBySpecialCharacters(wordLengthMap)
 
 	mainDatabase = compareDatabases(mainDatabase, preDatabase)
+
+	saveDatabase()
 }
 
 func isNoErr(err error) bool {
@@ -31,19 +33,23 @@ func isNoErr(err error) bool {
 }
 
 // checks error and ignores it if isErrFunc returns true, otherwise panics
-func errChek(err error, isErrFunc func(error) bool) {
-	if err != nil && !isErrFunc(err) {
+func errCheck(err error, isErrFunc func(error) bool) bool {
+	if isErrFunc(err) {
+		return true
+	}
+	if err != nil {
 		log.Fatal(err)
 	}
+	return false
 }
 
 func txtToWordList(filename string) []string {
 	file, err := os.Open(filename)
-	errChek(err, isNoErr)
+	errCheck(err, isNoErr)
 	defer file.Close()
 
 	fileContent, err := ioutil.ReadAll(file)
-	errChek(err, isNoErr)
+	errCheck(err, isNoErr)
 
 	words := strings.ReplaceAll(string(fileContent), " ", "\n")
 	return strings.Split(words, "\n")
