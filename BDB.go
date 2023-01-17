@@ -97,16 +97,16 @@ func characterizeBySpecialCharacters(wordLengthMap map[int][]string) Database {
 	for wordLength, wordList := range wordLengthMap {
 		var slw SameLengthWord
 		//slw := db.WordLength[wordLength]
-		slw.classifiedWords = make(map[uint32][]string)
+		slw.ClassifiedWords = make(map[uint32][]string)
 
 		for _, word := range wordList {
 
 			letterIndex := hashWord(word)
 
-			specialLetterWordList := slw.classifiedWords[letterIndex]
+			specialLetterWordList := slw.ClassifiedWords[letterIndex]
 
 			specialLetterWordList = append(specialLetterWordList, word)
-			slw.classifiedWords[letterIndex] = specialLetterWordList
+			slw.ClassifiedWords[letterIndex] = specialLetterWordList
 		}
 
 		db.WordLength[wordLength] = slw
@@ -132,17 +132,17 @@ func compareDatabases(mainDatabase Database, preDatabase Database) Database {
 var totalNewWords int
 
 func compareClassifiedWordMaps(mainSlw SameLengthWord, preSlw SameLengthWord) (newSlw SameLengthWord) {
-	for hash, classifiedWordList := range preSlw.classifiedWords {
-		mainClassifiedWords, ok := mainSlw.classifiedWords[hash]
+	for hash, classifiedWordList := range preSlw.ClassifiedWords {
+		mainClassifiedWords, ok := mainSlw.ClassifiedWords[hash]
 		if !ok {
-			mainSlw.classifiedWords[hash] = classifiedWordList
+			mainSlw.ClassifiedWords[hash] = classifiedWordList
 			continue
 		}
 
 		newWords := compareWordLists(mainClassifiedWords, classifiedWordList)
 		totalNewWords = totalNewWords + len(newWords)
 		mainClassifiedWords = append(mainClassifiedWords, newWords...)
-		mainSlw.classifiedWords[hash] = mainClassifiedWords
+		mainSlw.ClassifiedWords[hash] = mainClassifiedWords
 	}
 	return
 }
