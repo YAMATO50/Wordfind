@@ -23,6 +23,8 @@ func main() {
 
 func getFlags() {
 	args := os.Args
+	args = append(args, "-b")
+	args = append(args, "wortliste.txt")
 	for i, arg := range args {
 		if strings.ToLower(arg) == "-b" {
 			handleBuildDBFlag(args, i)
@@ -36,7 +38,7 @@ func getFlags() {
 func handleBuildDBFlag(args []string, argPos int) {
 	flagBuldDatabase = true
 
-	if len(args) >= argPos+1 {
+	if len(args) <= argPos+1 {
 		fmt.Print("Missing filepath after -b flag")
 		os.Exit(1)
 	}
