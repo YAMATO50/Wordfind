@@ -20,6 +20,8 @@ func buildDatabase(newBuildDBfile string, newBuildDBfileExt string) {
 		wordList = txtToWordList(newBuildDBfile)
 	}
 
+	wordList = wordListToLower(wordList)
+
 	logActions(fmt.Sprintf("%d words Loaded", len(wordList)))
 	logActions("Counting Word lengths")
 	wordLengthMap := countWordlength(wordList)
@@ -164,4 +166,11 @@ func compareWordLists(mainWordList []string, preWordList []string) (newWordList 
 		newWordList = append(newWordList, word)
 	}
 	return
+}
+
+func wordListToLower(wordList []string) []string {
+	for i := 0; i < len(wordList); i++ {
+		wordList[i] = strings.ToLower(wordList[i])
+	}
+	return wordList
 }
