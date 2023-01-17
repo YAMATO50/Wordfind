@@ -13,7 +13,8 @@ func loadDatabase() {
 	jsonData, err := ioutil.ReadFile("wordListDatabase.json")
 	noDatabaseFile := errCheck(err, os.IsNotExist)
 	if noDatabaseFile {
-		logActions("No database found, proceeding without Database")
+		logActions("No database found, proceeding with empty Database")
+		mainDatabase.WordLength = make(map[int]SameLengthWord)
 		return
 	}
 
