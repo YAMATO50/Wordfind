@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -15,14 +16,20 @@ func buildDatabase(newBuildDBfile string, newBuildDBfileExt string) {
 
 	switch newBuildDBfileExt {
 	case "txt":
+		logActions("Loading txt file")
 		wordList = txtToWordList(newBuildDBfile)
 	}
 
+	logActions(fmt.Sprintf("%d words Loaded", len(wordList)))
+	logActions("Counding Word lengths")
 	wordLengthMap := countWordlength(wordList)
 
+	logActions("Calculating hashes")
 	preDatabase := characterizeBySpecialCharacters(wordLengthMap)
 
+	logActions("Comparing old database to added words")
 	mainDatabase = compareDatabases(mainDatabase, preDatabase)
+	logActions(fmt.Sprintf("From %d words %d were added to old database", len(wordList), totalNewWords))
 
 	saveDatabase()
 }
@@ -119,6 +126,8 @@ func compareDatabases(mainDatabase Database, preDatabase Database) Database {
 	return mainDatabase
 }
 
+var totalNewWords int
+
 func compareClassifiedWordMaps(mainSlw SameLengthWord, preSlw SameLengthWord) (newSlw SameLengthWord) {
 	for hash, classifiedWordList := range preSlw.classifiedWords {
 		mainClassifiedWords, ok := mainSlw.classifiedWords[hash]
@@ -128,6 +137,7 @@ func compareClassifiedWordMaps(mainSlw SameLengthWord, preSlw SameLengthWord) (n
 		}
 
 		newWords := compareWordLists(mainClassifiedWords, classifiedWordList)
+		totalNewWords = totalNewWords + len(newWords)
 		mainClassifiedWords = append(mainClassifiedWords, newWords...)
 		mainSlw.classifiedWords[hash] = mainClassifiedWords
 	}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 )
 
 var flagBuldDatabase bool
@@ -17,7 +18,11 @@ func main() {
 
 	getFlags()
 	if flagBuldDatabase {
+		logActions("Building database")
+		timeMeasurement()
 		buildDatabase(newBuildDBfile, newBuildDBfileExt)
+		elapsed := timeMeasurement()
+		logActions(fmt.Sprintf("Database building took %d ns", elapsed))
 	}
 }
 
@@ -64,4 +69,22 @@ func logActions(logString string) {
 	if verbose {
 		fmt.Println(logString)
 	}
+}
+
+var firstCall bool = true
+var startTime int64
+
+func timeMeasurement() int64 {
+	if !verbose {
+		return 0
+	}
+
+	if !firstCall {
+		startTime = time.Now().UnixNano()
+		firstCall = false
+		return 0
+	}
+
+	firstCall = true
+	return time.Now().UnixNano() - startTime
 }
