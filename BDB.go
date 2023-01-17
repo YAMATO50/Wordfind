@@ -21,7 +21,7 @@ func buildDatabase(newBuildDBfile string, newBuildDBfileExt string) {
 	}
 
 	logActions(fmt.Sprintf("%d words Loaded", len(wordList)))
-	logActions("Counding Word lengths")
+	logActions("Counting Word lengths")
 	wordLengthMap := countWordlength(wordList)
 
 	logActions("Calculating hashes")
