@@ -113,6 +113,26 @@ func characterizeBySpecialCharacters(wordLengthMap map[int][]string) Database {
 
 		db.WordLength[wordLength] = slw
 	}
+
+	//Eliminating double words, because case is ignored
+	for wordLength, slw := range db.WordLength {
+		for hash, words := range slw.ClassifiedWords {
+			for i := 0; i < len(words); i++ {
+				for j := 0; j < len(words); j++ {
+					if i == j {
+						continue
+					}
+					if words[i] == words[j] {
+						words[j] = words[len(words)-1]
+						words = words[:len(words)-1]
+					}
+				}
+			}
+			slw.ClassifiedWords[hash] = words
+		}
+		db.WordLength[wordLength] = slw
+	}
+
 	return db
 }
 
