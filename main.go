@@ -14,9 +14,8 @@ var verbose bool
 var mainDatabase Database
 
 func main() {
-	loadDatabase()
-
 	getFlags()
+	loadDatabase()
 	if flagBuldDatabase {
 		logActions("Building database")
 		timeMeasurement()
