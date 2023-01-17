@@ -86,6 +86,8 @@ func containsWord(slice []string, word string) bool {
 
 func characterizeBySpecialCharacters(wordLengthMap map[int][]string) Database {
 	var db Database
+	db.WordLength = make(map[int]SameLengthWord)
+
 	for wordLength, wordList := range wordLengthMap {
 		slw := db.WordLength[wordLength]
 
