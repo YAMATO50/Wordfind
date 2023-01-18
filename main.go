@@ -141,4 +141,8 @@ func showHelp() {
 	fmt.Println()
 	fmt.Println("Available file Formats (-b)")
 	fmt.Println("\t.txt\tWords separated by newline and/or whitespace")
+	fmt.Println("")
+	fmt.Println("Use wordfind without the flags b, s or d to enter the main Programm")
+	fmt.Println("\tuse \"find\" to enter word Finging mode")
+	fmt.Println("\tuse \"exit\" to exit the Programm")
 }
