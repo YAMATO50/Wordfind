@@ -34,9 +34,6 @@ func main() {
 
 func getFlags() {
 	args := os.Args
-	args = append(args, "-v")
-	args = append(args, "-d")
-	args = append(args, "mosken")
 	for i, arg := range args {
 		arg = strings.ToLower(arg)
 		switch arg {
