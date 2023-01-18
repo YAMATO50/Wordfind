@@ -18,6 +18,9 @@ func buildDatabase(newBuildDBfile string, newBuildDBfileExt string) {
 	case "txt":
 		logActions("Loading txt file")
 		wordList = txtToWordList(newBuildDBfile)
+	case "list":
+		logActions("Loading list")
+		wordList = listToWordList(newBuildDBfile)
 	}
 
 	wordList = wordListToLower(wordList)
@@ -60,6 +63,11 @@ func txtToWordList(filename string) []string {
 	errCheck(err, isNoErr)
 
 	words := strings.ReplaceAll(string(fileContent), " ", "\n")
+	return strings.Split(words, "\n")
+}
+
+func listToWordList(list string) []string {
+	words := strings.ReplaceAll(list, " ", "\n")
 	return strings.Split(words, "\n")
 }
 

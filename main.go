@@ -27,13 +27,13 @@ func main() {
 
 func getFlags() {
 	args := os.Args
-	args = append(args, "-b")
-	args = append(args, "wortliste.txt")
 	for i, arg := range args {
 		arg = strings.ToLower(arg)
 		switch arg {
 		case "-b":
 			handleBuildDBFlag(args, i)
+		case "-s":
+			handleSingleWordFlag(args, i)
 		case "-v":
 			verbose = true
 		default:
@@ -65,6 +65,18 @@ func handleBuildDBFlag(args []string, argPos int) {
 		fmt.Println("Unsupported file extension")
 		os.Exit(1)
 	}
+}
+
+func handleSingleWordFlag(args []string, argPos int) {
+	flagBuldDatabase = true
+
+	if len(args) <= argPos+1 {
+		fmt.Println("Missing at least one word after -s flag")
+		os.Exit(1)
+	}
+
+	newBuildDBfile = strings.Join(args[argPos+1:], "\n")
+	newBuildDBfileExt = "list"
 }
 
 func logActions(logString string) {
