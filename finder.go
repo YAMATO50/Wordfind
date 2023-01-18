@@ -44,13 +44,19 @@ func find() {
 		return
 	}
 
+	timeMeasurement()
 	possibleWords := guess(characters, length)
+	elapsed := timeMeasurement()
 	fmt.Println("Results:")
 	fmt.Println()
 	for _, word := range possibleWords {
 		fmt.Println(word)
 	}
 	fmt.Println()
+	if verbose {
+		fmt.Printf("%d words found in %d ms\n", len(possibleWords), elapsed)
+		return
+	}
 	fmt.Printf("%d words found\n", len(possibleWords))
 }
 
