@@ -73,6 +73,8 @@ func guess(characters string, length int) []string {
 		possibleWords = append(possibleWords, sameLengthWords.ClassifiedWords[hash]...)
 	}
 
+	possibleWords = removeImpossibleWords(characters, possibleWords)
+
 	return possibleWords
 }
 
@@ -113,4 +115,34 @@ func toBinaryArray(num uint32) []uint32 {
 		num = num / 2
 	}
 	return remainders
+}
+
+func removeImpossibleWords(characters string, mabyPossibleWords []string) []string {
+	countedAvailableCharacters := countCharacters(characters)
+	var possibleWords []string
+
+	for _, word := range mabyPossibleWords {
+		countetCharacters := countCharacters(word)
+		possible := true
+		for character, count := range countetCharacters {
+			if count > countedAvailableCharacters[character] {
+				possible = false
+				break
+			}
+		}
+		if possible {
+			possibleWords = append(possibleWords, word)
+		}
+	}
+
+	return possibleWords
+}
+
+func countCharacters(word string) map[string]int {
+	singleChars := strings.Split(word, "")
+	count := make(map[string]int)
+	for _, char := range singleChars {
+		count[char] += 1
+	}
+	return count
 }
