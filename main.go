@@ -30,11 +30,14 @@ func getFlags() {
 	args = append(args, "-b")
 	args = append(args, "wortliste.txt")
 	for i, arg := range args {
-		if strings.ToLower(arg) == "-b" {
+		arg = strings.ToLower(arg)
+		switch arg {
+		case "-b":
 			handleBuildDBFlag(args, i)
-		}
-		if strings.ToLower(arg) == "-v" {
+		case "-v":
 			verbose = true
+		default:
+			continue
 		}
 	}
 }
