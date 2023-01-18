@@ -11,10 +11,15 @@ var flagBuldDatabase bool
 var newBuildDBfile string
 var newBuildDBfileExt string
 var verbose bool
+var help bool
 var mainDatabase Database
 
 func main() {
 	getFlags()
+	if help {
+		showHelp()
+		return
+	}
 	loadDatabase()
 	if flagBuldDatabase {
 		logActions("Building database")
@@ -36,6 +41,10 @@ func getFlags() {
 			handleSingleWordFlag(args, i)
 		case "-v":
 			verbose = true
+		case "-h":
+			fallthrough
+		case "-help":
+			help = true
 		default:
 			continue
 		}
@@ -101,4 +110,18 @@ func timeMeasurement() int64 {
 
 	firstCall = true
 	return time.Now().UnixNano() - startTime
+}
+
+func showHelp() {
+	fmt.Println("Usage: wordfind [flags|values]")
+	fmt.Println()
+	fmt.Println("Available flags:")
+	fmt.Println("\t-h")
+	fmt.Println("\t-help\tShows this help")
+	fmt.Println("\t-b\tBuild/Update the database from the file specified in the argument after -b")
+	fmt.Println("\t-s\tBuild/Update the database with all words following the -s flag")
+	fmt.Println("\t-v\tVerbose output")
+	fmt.Println()
+	fmt.Println("Available file Formats (-b)")
+	fmt.Println("\t.txt\tWords separated by newline and/or whitespace")
 }
