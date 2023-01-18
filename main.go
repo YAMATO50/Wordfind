@@ -29,6 +29,7 @@ func main() {
 		logActions(fmt.Sprintf("Database building took %d ns", elapsed))
 		return
 	}
+	findWords()
 }
 
 func getFlags() {
