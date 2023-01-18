@@ -27,6 +27,7 @@ func main() {
 		buildDatabase(newBuildDBfile, newBuildDBfileExt)
 		elapsed := timeMeasurement()
 		logActions(fmt.Sprintf("Database building took %d ns", elapsed))
+		return
 	}
 }
 
