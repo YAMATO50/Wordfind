@@ -153,7 +153,7 @@ func compareDatabases(mainDatabase Database, preDatabase Database) Database {
 
 var totalNewWords int
 
-func compareClassifiedWordMaps(mainSlw SameLengthWord, preSlw SameLengthWord) (newSlw SameLengthWord) {
+func compareClassifiedWordMaps(mainSlw SameLengthWord, preSlw SameLengthWord) SameLengthWord {
 	for hash, classifiedWordList := range preSlw.ClassifiedWords {
 		mainClassifiedWords, ok := mainSlw.ClassifiedWords[hash]
 		if !ok {
@@ -166,7 +166,7 @@ func compareClassifiedWordMaps(mainSlw SameLengthWord, preSlw SameLengthWord) (n
 		mainClassifiedWords = append(mainClassifiedWords, newWords...)
 		mainSlw.ClassifiedWords[hash] = mainClassifiedWords
 	}
-	return
+	return mainSlw
 }
 
 func compareWordLists(mainWordList []string, preWordList []string) (newWordList []string) {
