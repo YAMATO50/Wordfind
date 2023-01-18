@@ -14,6 +14,7 @@ func findWords() {
 	for true {
 		fmt.Print("wordFinder>")
 		input := readLine()
+		//input := "find"
 		switch strings.ToLower(input) {
 		case "exit":
 			return
@@ -29,8 +30,10 @@ func findWords() {
 func find() {
 	fmt.Print("Enter available characters: ")
 	characters := readLine()
+	//characters := "obmelqsnsgek"
 	fmt.Print("Enter word lenght: ")
 	lengthString := readLine()
+	//lengthString := "6"
 	length, err := strconv.Atoi(lengthString)
 	if err != nil {
 		fmt.Printf("%s is not a number!\n", lengthString)
@@ -79,11 +82,11 @@ func getPossibleHashes(characters string) []uint32 {
 	components := splitHash(maxHash)
 
 	var possibleHashes []uint32
-	for i := 0; i < len(components); i++ {
+	for i := 0; i < int(math.Pow(2, float64(len(components))))-1; i++ {
 		binArray := toBinaryArray(uint32(i) + 1)
 		var hash uint32
 		for j := 0; j < len(binArray); j++ {
-			hash = components[j] * binArray[j]
+			hash += components[j] * binArray[j]
 		}
 		possibleHashes = append(possibleHashes, hash)
 	}
