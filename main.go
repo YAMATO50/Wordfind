@@ -26,7 +26,7 @@ func main() {
 		timeMeasurement()
 		buildDatabase(newBuildDBfile, newBuildDBfileExt)
 		elapsed := timeMeasurement()
-		logActions(fmt.Sprintf("Database building took %d ns", elapsed))
+		logActions(fmt.Sprintf("Database building/updating took %d ms", elapsed))
 		return
 	}
 	findWords()
@@ -34,6 +34,9 @@ func main() {
 
 func getFlags() {
 	args := os.Args
+	args = append(args, "-v")
+	args = append(args, "-d")
+	args = append(args, "mosken")
 	for i, arg := range args {
 		arg = strings.ToLower(arg)
 		switch arg {
@@ -118,14 +121,14 @@ func timeMeasurement() int64 {
 		return 0
 	}
 
-	if !firstCall {
-		startTime = time.Now().UnixNano()
+	if firstCall {
+		startTime = time.Now().UnixMilli()
 		firstCall = false
 		return 0
 	}
 
 	firstCall = true
-	return time.Now().UnixNano() - startTime
+	return time.Now().UnixMilli() - startTime
 }
 
 func showHelp() {
