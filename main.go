@@ -43,6 +43,8 @@ func getFlags() {
 			handleSingleWordFlag(args, i)
 		case "-v":
 			verbose = true
+		case "-d":
+			handleDeleteWordsFlag(args, i)
 		case "-h":
 			fallthrough
 		case "-help":
@@ -90,6 +92,18 @@ func handleSingleWordFlag(args []string, argPos int) {
 	newBuildDBfileExt = "list"
 }
 
+func handleDeleteWordsFlag(args []string, argPos int) {
+	flagBuldDatabase = true
+
+	if len(args) <= argPos+1 {
+		fmt.Println("Missing at least one word after -d flag")
+		os.Exit(1)
+	}
+
+	newBuildDBfile = strings.Join(args[argPos+1:], "\n")
+	newBuildDBfileExt = "dellist"
+}
+
 func logActions(logString string) {
 	if verbose {
 		fmt.Println(logString)
@@ -123,6 +137,7 @@ func showHelp() {
 	fmt.Println("\t-b\tBuild/Update the database from the file specified in the argument after -b")
 	fmt.Println("\t-s\tBuild/Update the database with all words following the -s flag")
 	fmt.Println("\t-v\tVerbose output")
+	fmt.Println("\t-d\tDelete all words following the -d flag from the Database")
 	fmt.Println()
 	fmt.Println("Available file Formats (-b)")
 	fmt.Println("\t.txt\tWords separated by newline and/or whitespace")

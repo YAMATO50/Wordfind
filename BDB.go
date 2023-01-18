@@ -21,6 +21,10 @@ func buildDatabase(newBuildDBfile string, newBuildDBfileExt string) {
 	case "list":
 		logActions("Loading list")
 		wordList = listToWordList(newBuildDBfile)
+	case "dellist":
+		deleteElementsFromDatabase(newBuildDBfile)
+		saveDatabase()
+		return
 	}
 
 	wordList = wordListToLower(wordList)
@@ -201,4 +205,43 @@ func wordListToLower(wordList []string) []string {
 		wordList[i] = strings.ToLower(wordList[i])
 	}
 	return wordList
+}
+
+var deletedWords int
+
+func deleteElementsFromDatabase(list string) {
+	words := strings.ReplaceAll(list, " ", "\n")
+	wordList := strings.Split(words, "\n")
+	wordList = wordListToLower(wordList)
+
+	for _, word := range wordList {
+		length := len(word)
+		hash := hashWord(word)
+
+		sameLengthWords, ok := mainDatabase.WordLength[length]
+		if !ok {
+			//word not in Database
+			continue
+		}
+		classifiedWords, ok := sameLengthWords.ClassifiedWords[hash]
+		if !ok {
+			//word not in Database
+			continue
+		}
+		for idx, classifiedWord := range classifiedWords {
+			if classifiedWord != word {
+				continue
+			}
+			classifiedWords[idx] = classifiedWords[len(classifiedWords)-1]
+			classifiedWords = classifiedWords[:len(classifiedWords)-1]
+			deletedWords += 1
+			break //word Found
+		}
+		if len(classifiedWords) == 0 {
+			delete(mainDatabase.WordLength[length].ClassifiedWords, hash)
+			continue
+		}
+		mainDatabase.WordLength[length].ClassifiedWords[hash] = classifiedWords
+	}
+	logActions(fmt.Sprintf("from %d words, %d were deleted from the Database", len(wordList), deletedWords))
 }
