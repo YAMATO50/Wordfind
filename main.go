@@ -20,15 +20,20 @@ func main() {
 		showHelp()
 		return
 	}
+
 	loadDatabase()
+
 	if flagBuldDatabase {
 		logActions("Building database")
 		timeMeasurement()
+
 		buildDatabase(newBuildDBfile, newBuildDBfileExt)
+
 		elapsed := timeMeasurement()
 		logActions(fmt.Sprintf("Database building/updating took %d ms", elapsed))
 		return
 	}
+
 	findWords()
 }
 
