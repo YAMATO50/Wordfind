@@ -45,7 +45,7 @@ func getFlags() {
 		case "-b":
 			handleBuildDBFlag(args, i)
 		case "-s":
-			handleSingleWordFlag(args, i)
+			handleWordListFlag(args, i)
 		case "-v":
 			verbose = true
 		case "-d":
@@ -85,7 +85,7 @@ func handleBuildDBFlag(args []string, argPos int) {
 	}
 }
 
-func handleSingleWordFlag(args []string, argPos int) {
+func handleWordListFlag(args []string, argPos int) {
 	flagBuldDatabase = true
 
 	if len(args) <= argPos+1 {
