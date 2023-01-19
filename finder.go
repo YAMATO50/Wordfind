@@ -12,9 +12,8 @@ import (
 func findWords() {
 	reader = bufio.NewReader(os.Stdin)
 	for true {
-		fmt.Print("wordFinder>")
+		fmt.Print("Wordfind>")
 		input := readLine()
-		//input := "find"
 		switch strings.ToLower(input) {
 		case "exit":
 			return
@@ -30,10 +29,8 @@ func findWords() {
 func find() {
 	fmt.Print("Enter available characters: ")
 	characters := readLine()
-	//characters := "obmelqsnsgek"
 	fmt.Print("Enter word lenght: ")
 	lengthString := readLine()
-	//lengthString := "6"
 	length, err := strconv.Atoi(lengthString)
 	if err != nil {
 		fmt.Printf("%s is not a number!\n", lengthString)
