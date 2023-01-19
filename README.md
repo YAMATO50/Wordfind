@@ -1,7 +1,7 @@
 # Wordfind
 If you provide wordfinder with a set of letters (this can include one letter more than once) and a word length, from its database, it will find all words with the provided length that are constructable from the set of letters.
 
-
+![example](https://github.com/YAMATO50/Wordfind/blob/main/WordfindExample.PNG)
 
 ## Usage
 
