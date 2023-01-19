@@ -82,7 +82,7 @@ func guess(characters string, length int) []string {
 }
 
 func getPossibleHashes(characters string) []uint32 {
-	maxHash := hashWord(characters)
+	maxHash := computeHash(characters)
 
 	components := splitHash(maxHash)
 

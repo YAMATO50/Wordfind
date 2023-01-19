@@ -115,7 +115,7 @@ func characterizeBySpecialCharacters(wordLengthMap map[int][]string) Database {
 
 		for _, word := range wordList {
 
-			letterIndex := hashWord(word)
+			letterIndex := computeHash(word)
 
 			specialLetterWordList := slw.ClassifiedWords[letterIndex]
 
@@ -216,7 +216,7 @@ func deleteElementsFromDatabase(list string) {
 
 	for _, word := range wordList {
 		length := len(word)
-		hash := hashWord(word)
+		hash := computeHash(word)
 
 		sameLengthWords, ok := mainDatabase.WordLength[length]
 		if !ok {

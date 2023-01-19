@@ -2,7 +2,7 @@ package main
 
 import "strings"
 
-func hashWord(word string) uint32 {
+func computeHash(word string) uint32 {
 	var sum uint32 = 0
 
 	for _, letter := range strings.ToLower(word) {
