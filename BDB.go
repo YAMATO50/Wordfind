@@ -19,7 +19,7 @@ func buildDatabase(newBuildDBfile string, newBuildDBfileExt string) {
 		logActions("Loading list")
 		wordList = listToWordList(newBuildDBfile)
 	case "dellist":
-		deleteElementsFromDatabase(newBuildDBfile)
+		deleteWordsFromDatabase(newBuildDBfile)
 		saveDatabase()
 		return
 	}
@@ -207,7 +207,7 @@ func wordListToLower(wordList []string) []string {
 
 var deletedWords int
 
-func deleteElementsFromDatabase(list string) {
+func deleteWordsFromDatabase(list string) {
 	words := strings.ReplaceAll(list, " ", "\n")
 	wordList := strings.Split(words, "\n")
 	wordList = wordListToLower(wordList)
@@ -221,25 +221,26 @@ func deleteElementsFromDatabase(list string) {
 			//word not in Database
 			continue
 		}
-		classifiedWords, ok := sameLengthWords.ClassifiedWords[hash]
+		hashedWords, ok := sameLengthWords.ClassifiedWords[hash]
 		if !ok {
 			//word not in Database
 			continue
 		}
-		for idx, classifiedWord := range classifiedWords {
+		for idx, classifiedWord := range hashedWords {
 			if classifiedWord != word {
 				continue
 			}
-			classifiedWords[idx] = classifiedWords[len(classifiedWords)-1]
-			classifiedWords = classifiedWords[:len(classifiedWords)-1]
+
+			hashedWords[idx] = hashedWords[len(hashedWords)-1]
+			hashedWords = hashedWords[:len(hashedWords)-1]
 			deletedWords += 1
 			break //word Found
 		}
-		if len(classifiedWords) == 0 {
+		if len(hashedWords) == 0 {
 			delete(mainDatabase.WordLength[length].ClassifiedWords, hash)
 			continue
 		}
-		mainDatabase.WordLength[length].ClassifiedWords[hash] = classifiedWords
+		mainDatabase.WordLength[length].ClassifiedWords[hash] = hashedWords
 	}
 	logActions(fmt.Sprintf("From %d words, %d were deleted from the database", len(wordList), deletedWords))
 }
