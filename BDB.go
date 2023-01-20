@@ -166,7 +166,7 @@ func compareHashedWordMaps(mainSlw SameLengthWord, preSlw SameLengthWord) SameLe
 		mainSameHashedWordList, ok := mainSlw.ClassifiedWords[hash]
 		if !ok {
 			mainSlw.ClassifiedWords[hash] = sameHashWordList
-			continue
+			continue //no words with hash 'hash' contained in old database
 		}
 
 		newWords := compareWordLists(mainSameHashedWordList, sameHashWordList)
