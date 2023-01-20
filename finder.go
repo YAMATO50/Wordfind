@@ -119,6 +119,7 @@ func splitHash(availableCharactersHash uint32) (components []uint32) {
 	return
 }
 
+// Get the binary representation of a given number as a list. First element is the least significant bit
 func toBinaryArray(num uint32) []uint32 {
 	var remainders []uint32
 	for num != 0 {
