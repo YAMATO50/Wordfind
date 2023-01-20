@@ -150,7 +150,7 @@ func compareDatabases(mainDatabase Database, preDatabase Database) Database {
 		mainSlw, ok := mainDatabase.WordLength[length]
 		if !ok {
 			mainDatabase.WordLength[length] = preSlw
-			continue
+			continue //no words with length 'length' contained in old database
 		}
 
 		mainDatabase.WordLength[length] = compareClassifiedWordMaps(mainSlw, preSlw)
