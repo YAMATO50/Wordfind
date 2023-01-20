@@ -28,3 +28,9 @@ To delete words, use
 The list of words is space separated.
 
 All commands can be run with -v option to get a detailed output.
+
+## License
+
+The programm is licensed under the GLPv3.
+
+The wordlist used to generate the Database originates from [davidak/wortliste](https://github.com/davidak/wortliste).
