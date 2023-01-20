@@ -233,9 +233,7 @@ func deleteWordsFromDatabase(list string) {
 				continue
 			}
 
-			//Delete word at position idx
-			hashedWords[idx] = hashedWords[len(hashedWords)-1]
-			hashedWords = hashedWords[:len(hashedWords)-1]
+			hashedWords = deleteFromSlice(hashedWords, idx)
 
 			deletedWords += 1 //needed for logging
 
