@@ -119,23 +119,29 @@ func characterizeByHash(wordLengthMap map[int][]string) Database {
 func eliminateDoubleWords(db Database) Database {
 	for wordLength, slw := range db.SameLengthWords {
 		for hash, words := range slw.SameHashedWords {
+
 			for i := 0; i < len(words); i++ {
 				for j := 0; j < len(words); j++ {
 					if i == j {
 						continue
 					}
 					if words[i] == words[j] {
-						words[j] = words[len(words)-1]
-						words = words[:len(words)-1]
+						words = deleteFromSlice(words, j)
 					}
 				}
 			}
 			slw.SameHashedWords[hash] = words
 		}
+
 		db.SameLengthWords[wordLength] = slw
 	}
 
 	return db
+}
+
+func deleteFromSlice(s []string, idx int) []string {
+	s[idx] = s[len(s)-1]
+	return s[:len(s)-1]
 }
 
 func compareDatabases(mainDatabase Database, preDatabase Database) Database {
