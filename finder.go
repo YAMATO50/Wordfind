@@ -92,7 +92,9 @@ func getPossibleHashes(characters string) []uint32 {
 	components := splitHash(availableCharactersHash)
 
 	var possibleHashes []uint32
-	for i := 0; i < int(math.Pow(2, float64(len(components))))-1; i++ {
+	combinations := int(math.Pow(2, float64(len(components)))) - 1
+
+	for i := 0; i < combinations; i++ {
 		binArray := toBinaryArray(uint32(i) + 1)
 		var hash uint32
 		for j := 0; j < len(binArray); j++ {
