@@ -153,7 +153,7 @@ func compareDatabases(mainDatabase Database, preDatabase Database) Database {
 			continue //no words with length 'length' contained in old database
 		}
 
-		mainDatabase.WordLength[length] = compareClassifiedWordMaps(mainSlw, preSlw)
+		mainDatabase.WordLength[length] = compareHashedWordMaps(mainSlw, preSlw)
 	}
 
 	return mainDatabase
@@ -161,18 +161,18 @@ func compareDatabases(mainDatabase Database, preDatabase Database) Database {
 
 var totalNewWords int
 
-func compareClassifiedWordMaps(mainSlw SameLengthWord, preSlw SameLengthWord) SameLengthWord {
-	for hash, classifiedWordList := range preSlw.ClassifiedWords {
-		mainClassifiedWords, ok := mainSlw.ClassifiedWords[hash]
+func compareHashedWordMaps(mainSlw SameLengthWord, preSlw SameLengthWord) SameLengthWord {
+	for hash, sameHashWordList := range preSlw.ClassifiedWords {
+		mainSameHashedWordList, ok := mainSlw.ClassifiedWords[hash]
 		if !ok {
-			mainSlw.ClassifiedWords[hash] = classifiedWordList
+			mainSlw.ClassifiedWords[hash] = sameHashWordList
 			continue
 		}
 
-		newWords := compareWordLists(mainClassifiedWords, classifiedWordList)
+		newWords := compareWordLists(mainSameHashedWordList, sameHashWordList)
 		totalNewWords = totalNewWords + len(newWords)
-		mainClassifiedWords = append(mainClassifiedWords, newWords...)
-		mainSlw.ClassifiedWords[hash] = mainClassifiedWords
+		mainSameHashedWordList = append(mainSameHashedWordList, newWords...)
+		mainSlw.ClassifiedWords[hash] = mainSameHashedWordList
 	}
 	return mainSlw
 }
