@@ -153,8 +153,10 @@ func removeImpossibleWords(characters string, mabyPossibleWords []string) []stri
 func countCharacters(word string) map[string]int {
 	singleChars := strings.Split(word, "")
 	count := make(map[string]int)
+
 	for _, char := range singleChars {
 		count[char] += 1
 	}
+
 	return count
 }
