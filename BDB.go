@@ -83,7 +83,7 @@ func countWordlength(wordList []string) map[int][]string {
 
 		wordsWithSameLength := wordLengthMap[length]
 		if containsWord(wordsWithSameLength, word) {
-			continue
+			continue //Ignore doubled words
 		}
 
 		wordsWithSameLength = append(wordsWithSameLength, word)
