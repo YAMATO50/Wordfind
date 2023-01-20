@@ -78,7 +78,7 @@ func countWordlength(wordList []string) map[int][]string {
 	for _, word := range wordList {
 		length := len(word)
 		if length == 0 {
-			continue
+			continue //Ignore empty strings
 		}
 
 		wordsWithSpecificLength := wordLengthMap[length]
