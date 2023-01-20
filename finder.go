@@ -87,9 +87,9 @@ func getPossibleWords(characters string, length int) []string {
 }
 
 func getPossibleHashes(characters string) []uint32 {
-	maxHash := computeHash(characters)
+	availableCharactersHash := computeHash(characters)
 
-	components := splitHash(maxHash)
+	components := splitHash(availableCharactersHash)
 
 	var possibleHashes []uint32
 	for i := 0; i < int(math.Pow(2, float64(len(components))))-1; i++ {
