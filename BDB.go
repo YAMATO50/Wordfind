@@ -31,7 +31,7 @@ func buildDatabase(newBuildDBfile string, newBuildDBfileExt string) {
 	wordLengthMap := countWordlength(wordList)
 
 	logActions("Calculating hashes")
-	preDatabase := characterizeBySpecialCharacters(wordLengthMap)
+	preDatabase := characterizeByHash(wordLengthMap)
 
 	logActions("Comparing old database to added words")
 	mainDatabase = compareDatabases(mainDatabase, preDatabase)
@@ -101,7 +101,7 @@ func containsWord(wordList []string, word string) bool {
 	return false
 }
 
-func characterizeBySpecialCharacters(wordLengthMap map[int][]string) Database {
+func characterizeByHash(wordLengthMap map[int][]string) Database {
 	var db Database
 	db.WordLength = make(map[int]SameLengthWord)
 
@@ -111,12 +111,12 @@ func characterizeBySpecialCharacters(wordLengthMap map[int][]string) Database {
 
 		for _, word := range wordList {
 
-			letterIndex := computeHash(word)
+			hash := computeHash(word)
 
-			specialLetterWordList := slw.ClassifiedWords[letterIndex]
+			sameHashWordList := slw.ClassifiedWords[hash]
 
-			specialLetterWordList = append(specialLetterWordList, word)
-			slw.ClassifiedWords[letterIndex] = specialLetterWordList
+			sameHashWordList = append(sameHashWordList, word)
+			slw.ClassifiedWords[hash] = sameHashWordList
 		}
 
 		db.WordLength[wordLength] = slw
