@@ -92,13 +92,14 @@ func getPossibleHashes(characters string) []uint32 {
 	components := splitHash(availableCharactersHash)
 
 	var possibleHashes []uint32
-	combinations := int(math.Pow(2, float64(len(components)))) - 1
+	combinations := int(math.Pow(2, float64(len(components)))) - 1 //-1 to ignore 0b0 case
 
 	for i := 0; i < combinations; i++ {
-		binArray := toBinaryArray(uint32(i) + 1)
+		binArray := toBinaryArray(uint32(i) + 1) //+1 to ignore 0b0 case
 		var hash uint32
 		for j := 0; j < len(binArray); j++ {
 			hash += components[j] * binArray[j]
+			//multiply each power of 2 contained in the availableCharactersHash by the bits of the "combination-index" to get all possible hash combinations
 		}
 		possibleHashes = append(possibleHashes, hash)
 	}
