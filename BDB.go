@@ -9,9 +9,6 @@ import (
 )
 
 func buildDatabase(newBuildDBfile string, newBuildDBfileExt string) {
-	//err := os.Mkdir("wordDataBase", 664)
-	//errChek(err, os.IsExist)
-
 	var wordList []string
 
 	switch newBuildDBfileExt {
