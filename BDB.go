@@ -241,7 +241,7 @@ func deleteWordsFromDatabase(list string) {
 		}
 		if len(hashedWords) == 0 {
 			delete(mainDatabase.WordLength[length].ClassifiedWords, hash)
-			continue
+			continue //No need to save an empty map field
 		}
 		mainDatabase.WordLength[length].ClassifiedWords[hash] = hashedWords
 	}
