@@ -92,8 +92,8 @@ func countWordlength(wordList []string) map[int][]string {
 	return wordLengthMap
 }
 
-func containsWord(slice []string, word string) bool {
-	for _, element := range slice {
+func containsWord(wordList []string, word string) bool {
+	for _, element := range wordList {
 		if element == word {
 			return true
 		}
