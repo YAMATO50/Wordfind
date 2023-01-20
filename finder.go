@@ -45,7 +45,7 @@ func find() {
 	}
 
 	timeMeasurement()
-	possibleWords := guess(characters, length)
+	possibleWords := getPossibleWords(characters, length)
 	elapsed := timeMeasurement()
 	fmt.Println("Results:")
 	fmt.Println()
@@ -69,7 +69,7 @@ func readLine() string {
 	return text
 }
 
-func guess(characters string, length int) []string {
+func getPossibleWords(characters string, length int) []string {
 	sameLengthWords := mainDatabase.WordLength[length]
 
 	hashes := getPossibleHashes(characters)
