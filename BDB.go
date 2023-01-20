@@ -26,8 +26,8 @@ func buildDatabase(newBuildDBfile string, newBuildDBfileExt string) {
 
 	wordList = wordListToLower(wordList)
 
-	logActions(fmt.Sprintf("%d words Loaded", len(wordList)))
-	logActions("Counting Word lengths")
+	logActions(fmt.Sprintf("%d words loaded", len(wordList)))
+	logActions("Counting word lengths")
 	wordLengthMap := countWordlength(wordList)
 
 	logActions("Calculating hashes")
@@ -239,5 +239,5 @@ func deleteElementsFromDatabase(list string) {
 		}
 		mainDatabase.WordLength[length].ClassifiedWords[hash] = classifiedWords
 	}
-	logActions(fmt.Sprintf("from %d words, %d were deleted from the Database", len(wordList), deletedWords))
+	logActions(fmt.Sprintf("From %d words, %d were deleted from the database", len(wordList), deletedWords))
 }
