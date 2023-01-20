@@ -81,13 +81,13 @@ func countWordlength(wordList []string) map[int][]string {
 			continue //Ignore empty strings
 		}
 
-		wordsWithSpecificLength := wordLengthMap[length]
-		if containsWord(wordsWithSpecificLength, word) {
+		wordsWithSameLength := wordLengthMap[length]
+		if containsWord(wordsWithSameLength, word) {
 			continue
 		}
 
-		wordsWithSpecificLength = append(wordsWithSpecificLength, word)
-		wordLengthMap[length] = wordsWithSpecificLength
+		wordsWithSameLength = append(wordsWithSameLength, word)
+		wordLengthMap[length] = wordsWithSameLength
 	}
 	return wordLengthMap
 }
