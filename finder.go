@@ -29,13 +29,16 @@ func findWords() {
 func find() {
 	fmt.Print("Enter available characters: ")
 	characters := readLine()
+
 	fmt.Print("Enter word lenght: ")
 	lengthString := readLine()
+
 	length, err := strconv.Atoi(lengthString)
 	if err != nil {
 		fmt.Printf("%s is not a number!\n", lengthString)
 		return
 	}
+
 	if length <= 0 || length > len(characters) {
 		fmt.Println("Invalid length!")
 		return
