@@ -3,16 +3,16 @@ package main
 /*
 This is the sorted Word Database
 
-WordLength map is indexed by the length of the word
+SameLengthWords map is indexed by the length of the word
 */
 type Database struct {
-	WordLength map[int]SameLengthWord `json:"WordLength"`
+	SameLengthWords map[int]SameLengthWord `json:"SameLengthWords"`
 }
 
 /*
 All words contained in SameLengthWord have the same length
 
-classifiedWords map is indexed by a value computed from the characters contained in a word
+SameHashedWords map is indexed by a value computed from the characters contained in a word
 
 the key is computed as follows:
 
@@ -26,5 +26,5 @@ default: 0b10000000000000000000000000000000
 Whenever a word contains one of the characters, OR the value with the sum. At the end, the sum is your key
 */
 type SameLengthWord struct {
-	ClassifiedWords map[uint32][]string `json:"HashedWords"`
+	SameHashedWords map[uint32][]string `json:"SameHashedWords"`
 }

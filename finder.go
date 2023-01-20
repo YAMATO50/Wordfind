@@ -29,27 +29,32 @@ func findWords() {
 func find() {
 	fmt.Print("Enter available characters: ")
 	characters := readLine()
+
 	fmt.Print("Enter word lenght: ")
 	lengthString := readLine()
+
 	length, err := strconv.Atoi(lengthString)
 	if err != nil {
 		fmt.Printf("%s is not a number!\n", lengthString)
 		return
 	}
+
 	if length <= 0 || length > len(characters) {
 		fmt.Println("Invalid length!")
 		return
 	}
 
 	timeMeasurement()
-	possibleWords := guess(characters, length)
+	possibleWords := getPossibleWords(characters, length)
 	elapsed := timeMeasurement()
+
 	fmt.Println("Results:")
 	fmt.Println()
 	for _, word := range possibleWords {
 		fmt.Println(word)
 	}
 	fmt.Println()
+
 	if verbose {
 		fmt.Printf("%d words found in %d ms\n", len(possibleWords), elapsed)
 		return
@@ -66,14 +71,14 @@ func readLine() string {
 	return text
 }
 
-func guess(characters string, length int) []string {
-	sameLengthWords := mainDatabase.WordLength[length]
+func getPossibleWords(characters string, length int) []string {
+	sameLengthWords := mainDatabase.SameLengthWords[length]
 
 	hashes := getPossibleHashes(characters)
 
 	var possibleWords []string
 	for _, hash := range hashes {
-		possibleWords = append(possibleWords, sameLengthWords.ClassifiedWords[hash]...)
+		possibleWords = append(possibleWords, sameLengthWords.SameHashedWords[hash]...)
 	}
 
 	possibleWords = removeImpossibleWords(characters, possibleWords)
@@ -82,24 +87,27 @@ func guess(characters string, length int) []string {
 }
 
 func getPossibleHashes(characters string) []uint32 {
-	maxHash := computeHash(characters)
+	availableCharactersHash := computeHash(characters)
 
-	components := splitHash(maxHash)
+	components := splitHash(availableCharactersHash)
 
 	var possibleHashes []uint32
-	for i := 0; i < int(math.Pow(2, float64(len(components))))-1; i++ {
-		binArray := toBinaryArray(uint32(i) + 1)
+	combinations := int(math.Pow(2, float64(len(components)))) - 1 //-1 to ignore 0b0 case
+
+	for i := 0; i < combinations; i++ {
+		binArray := toBinaryArray(uint32(i) + 1) //+1 to ignore 0b0 case
 		var hash uint32
 		for j := 0; j < len(binArray); j++ {
 			hash += components[j] * binArray[j]
+			//multiply each power of 2 contained in the availableCharactersHash by the bits of the "combination-index" to get all possible hash combinations
 		}
 		possibleHashes = append(possibleHashes, hash)
 	}
 	return possibleHashes
 }
 
-func splitHash(maxHash uint32) (components []uint32) {
-	remainders := toBinaryArray(maxHash)
+func splitHash(availableCharactersHash uint32) (components []uint32) {
+	remainders := toBinaryArray(availableCharactersHash)
 
 	for i, remainder := range remainders {
 		component := uint32(math.Pow(2, float64(i))) * remainder
@@ -111,6 +119,7 @@ func splitHash(maxHash uint32) (components []uint32) {
 	return
 }
 
+// Get the binary representation of a given number as a list. First element is the least significant bit
 func toBinaryArray(num uint32) []uint32 {
 	var remainders []uint32
 	for num != 0 {
@@ -127,6 +136,7 @@ func removeImpossibleWords(characters string, mabyPossibleWords []string) []stri
 	for _, word := range mabyPossibleWords {
 		countetCharacters := countCharacters(word)
 		possible := true
+
 		for character, count := range countetCharacters {
 			if count > countedAvailableCharacters[character] {
 				possible = false
@@ -144,8 +154,10 @@ func removeImpossibleWords(characters string, mabyPossibleWords []string) []stri
 func countCharacters(word string) map[string]int {
 	singleChars := strings.Split(word, "")
 	count := make(map[string]int)
+
 	for _, char := range singleChars {
 		count[char] += 1
 	}
+
 	return count
 }

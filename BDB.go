@@ -9,9 +9,6 @@ import (
 )
 
 func buildDatabase(newBuildDBfile string, newBuildDBfileExt string) {
-	//err := os.Mkdir("wordDataBase", 664)
-	//errChek(err, os.IsExist)
-
 	var wordList []string
 
 	switch newBuildDBfileExt {
@@ -22,19 +19,19 @@ func buildDatabase(newBuildDBfile string, newBuildDBfileExt string) {
 		logActions("Loading list")
 		wordList = listToWordList(newBuildDBfile)
 	case "dellist":
-		deleteElementsFromDatabase(newBuildDBfile)
+		deleteWordsFromDatabase(newBuildDBfile)
 		saveDatabase()
 		return
 	}
 
 	wordList = wordListToLower(wordList)
 
-	logActions(fmt.Sprintf("%d words Loaded", len(wordList)))
-	logActions("Counting Word lengths")
+	logActions(fmt.Sprintf("%d words loaded", len(wordList)))
+	logActions("Counting word lengths")
 	wordLengthMap := countWordlength(wordList)
 
 	logActions("Calculating hashes")
-	preDatabase := characterizeBySpecialCharacters(wordLengthMap)
+	preDatabase := characterizeByHash(wordLengthMap)
 
 	logActions("Comparing old database to added words")
 	mainDatabase = compareDatabases(mainDatabase, preDatabase)
@@ -81,83 +78,84 @@ func countWordlength(wordList []string) map[int][]string {
 	for _, word := range wordList {
 		length := len(word)
 		if length == 0 {
-			continue
+			continue //Ignore empty strings
 		}
 
-		wordsWithSpecificLength := wordLengthMap[length]
-		if containsWord(wordsWithSpecificLength, word) {
-			continue
-		}
+		wordsWithSameLength := wordLengthMap[length]
 
-		wordsWithSpecificLength = append(wordsWithSpecificLength, word)
-		wordLengthMap[length] = wordsWithSpecificLength
+		wordsWithSameLength = append(wordsWithSameLength, word)
+		wordLengthMap[length] = wordsWithSameLength
 	}
 	return wordLengthMap
 }
 
-func containsWord(slice []string, word string) bool {
-	for _, element := range slice {
-		if element == word {
-			return true
-		}
-	}
-	return false
-}
-
-func characterizeBySpecialCharacters(wordLengthMap map[int][]string) Database {
+func characterizeByHash(wordLengthMap map[int][]string) Database {
 	var db Database
-	db.WordLength = make(map[int]SameLengthWord)
+	db.SameLengthWords = make(map[int]SameLengthWord)
 
 	for wordLength, wordList := range wordLengthMap {
 		var slw SameLengthWord
-		//slw := db.WordLength[wordLength]
-		slw.ClassifiedWords = make(map[uint32][]string)
+		slw.SameHashedWords = make(map[uint32][]string)
 
 		for _, word := range wordList {
 
-			letterIndex := computeHash(word)
+			hash := computeHash(word)
 
-			specialLetterWordList := slw.ClassifiedWords[letterIndex]
+			sameHashWordList := slw.SameHashedWords[hash]
 
-			specialLetterWordList = append(specialLetterWordList, word)
-			slw.ClassifiedWords[letterIndex] = specialLetterWordList
+			sameHashWordList = append(sameHashWordList, word)
+			slw.SameHashedWords[hash] = sameHashWordList
 		}
 
-		db.WordLength[wordLength] = slw
+		db.SameLengthWords[wordLength] = slw
 	}
 
 	//Eliminating double words, because case is ignored
-	for wordLength, slw := range db.WordLength {
-		for hash, words := range slw.ClassifiedWords {
+	db = eliminateDoubleWords(db)
+
+	return db
+}
+
+func eliminateDoubleWords(db Database) Database {
+	for wordLength, slw := range db.SameLengthWords {
+		for hash, words := range slw.SameHashedWords {
+
 			for i := 0; i < len(words); i++ {
 				for j := 0; j < len(words); j++ {
+
 					if i == j {
-						continue
+						continue //Word at the same index is always the same
 					}
+
 					if words[i] == words[j] {
-						words[j] = words[len(words)-1]
-						words = words[:len(words)-1]
+						words = deleteFromSlice(words, j)
 					}
 				}
 			}
-			slw.ClassifiedWords[hash] = words
+			slw.SameHashedWords[hash] = words
 		}
-		db.WordLength[wordLength] = slw
+
+		db.SameLengthWords[wordLength] = slw
 	}
 
 	return db
 }
 
-func compareDatabases(mainDatabase Database, preDatabase Database) Database {
-	for length, preSlw := range preDatabase.WordLength {
+func deleteFromSlice(s []string, idx int) []string {
+	s[idx] = s[len(s)-1]
+	return s[:len(s)-1]
+}
 
-		mainSlw, ok := mainDatabase.WordLength[length]
+func compareDatabases(mainDatabase Database, preDatabase Database) Database {
+	for length, preSlw := range preDatabase.SameLengthWords {
+
+		mainSlw, ok := mainDatabase.SameLengthWords[length]
 		if !ok {
-			mainDatabase.WordLength[length] = preSlw
-			continue
+			mainDatabase.SameLengthWords[length] = preSlw
+			continue //no words with length 'length' contained in old database
 		}
 
-		mainDatabase.WordLength[length] = compareClassifiedWordMaps(mainSlw, preSlw)
+		mainDatabase.SameLengthWords[length] = compareHashedWordMaps(mainSlw, preSlw)
 	}
 
 	return mainDatabase
@@ -165,18 +163,20 @@ func compareDatabases(mainDatabase Database, preDatabase Database) Database {
 
 var totalNewWords int
 
-func compareClassifiedWordMaps(mainSlw SameLengthWord, preSlw SameLengthWord) SameLengthWord {
-	for hash, classifiedWordList := range preSlw.ClassifiedWords {
-		mainClassifiedWords, ok := mainSlw.ClassifiedWords[hash]
+func compareHashedWordMaps(mainSlw SameLengthWord, preSlw SameLengthWord) SameLengthWord {
+	for hash, sameHashWordList := range preSlw.SameHashedWords {
+		mainSameHashedWordList, ok := mainSlw.SameHashedWords[hash]
 		if !ok {
-			mainSlw.ClassifiedWords[hash] = classifiedWordList
-			continue
+			mainSlw.SameHashedWords[hash] = sameHashWordList
+			continue //no words with hash 'hash' contained in old database
 		}
 
-		newWords := compareWordLists(mainClassifiedWords, classifiedWordList)
-		totalNewWords = totalNewWords + len(newWords)
-		mainClassifiedWords = append(mainClassifiedWords, newWords...)
-		mainSlw.ClassifiedWords[hash] = mainClassifiedWords
+		newWords := compareWordLists(mainSameHashedWordList, sameHashWordList)
+
+		totalNewWords = totalNewWords + len(newWords) //needed for logging
+
+		mainSameHashedWordList = append(mainSameHashedWordList, newWords...)
+		mainSlw.SameHashedWords[hash] = mainSameHashedWordList
 	}
 	return mainSlw
 }
@@ -209,7 +209,7 @@ func wordListToLower(wordList []string) []string {
 
 var deletedWords int
 
-func deleteElementsFromDatabase(list string) {
+func deleteWordsFromDatabase(list string) {
 	words := strings.ReplaceAll(list, " ", "\n")
 	wordList := strings.Split(words, "\n")
 	wordList = wordListToLower(wordList)
@@ -218,30 +218,32 @@ func deleteElementsFromDatabase(list string) {
 		length := len(word)
 		hash := computeHash(word)
 
-		sameLengthWords, ok := mainDatabase.WordLength[length]
+		sameLengthWords, ok := mainDatabase.SameLengthWords[length]
 		if !ok {
 			//word not in Database
 			continue
 		}
-		classifiedWords, ok := sameLengthWords.ClassifiedWords[hash]
+		hashedWords, ok := sameLengthWords.SameHashedWords[hash]
 		if !ok {
 			//word not in Database
 			continue
 		}
-		for idx, classifiedWord := range classifiedWords {
-			if classifiedWord != word {
+		for idx, hashedWordFromDatabase := range hashedWords {
+			if hashedWordFromDatabase != word {
 				continue
 			}
-			classifiedWords[idx] = classifiedWords[len(classifiedWords)-1]
-			classifiedWords = classifiedWords[:len(classifiedWords)-1]
-			deletedWords += 1
+
+			hashedWords = deleteFromSlice(hashedWords, idx)
+
+			deletedWords += 1 //needed for logging
+
 			break //word Found
 		}
-		if len(classifiedWords) == 0 {
-			delete(mainDatabase.WordLength[length].ClassifiedWords, hash)
-			continue
+		if len(hashedWords) == 0 {
+			delete(mainDatabase.SameLengthWords[length].SameHashedWords, hash)
+			continue //No need to save an empty map field
 		}
-		mainDatabase.WordLength[length].ClassifiedWords[hash] = classifiedWords
+		mainDatabase.SameLengthWords[length].SameHashedWords[hash] = hashedWords
 	}
-	logActions(fmt.Sprintf("from %d words, %d were deleted from the Database", len(wordList), deletedWords))
+	logActions(fmt.Sprintf("From %d words, %d were deleted from the database", len(wordList), deletedWords))
 }
