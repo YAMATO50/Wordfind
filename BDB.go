@@ -107,7 +107,6 @@ func characterizeBySpecialCharacters(wordLengthMap map[int][]string) Database {
 
 	for wordLength, wordList := range wordLengthMap {
 		var slw SameLengthWord
-		//slw := db.WordLength[wordLength]
 		slw.ClassifiedWords = make(map[uint32][]string)
 
 		for _, word := range wordList {
