@@ -72,13 +72,13 @@ func readLine() string {
 }
 
 func getPossibleWords(characters string, length int) []string {
-	sameLengthWords := mainDatabase.WordLength[length]
+	sameLengthWords := mainDatabase.SameLengthWords[length]
 
 	hashes := getPossibleHashes(characters)
 
 	var possibleWords []string
 	for _, hash := range hashes {
-		possibleWords = append(possibleWords, sameLengthWords.ClassifiedWords[hash]...)
+		possibleWords = append(possibleWords, sameLengthWords.SameHashedWords[hash]...)
 	}
 
 	possibleWords = removeImpossibleWords(characters, possibleWords)

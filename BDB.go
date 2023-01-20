@@ -103,28 +103,28 @@ func containsWord(wordList []string, word string) bool {
 
 func characterizeByHash(wordLengthMap map[int][]string) Database {
 	var db Database
-	db.WordLength = make(map[int]SameLengthWord)
+	db.SameLengthWords = make(map[int]SameLengthWord)
 
 	for wordLength, wordList := range wordLengthMap {
 		var slw SameLengthWord
-		slw.ClassifiedWords = make(map[uint32][]string)
+		slw.SameHashedWords = make(map[uint32][]string)
 
 		for _, word := range wordList {
 
 			hash := computeHash(word)
 
-			sameHashWordList := slw.ClassifiedWords[hash]
+			sameHashWordList := slw.SameHashedWords[hash]
 
 			sameHashWordList = append(sameHashWordList, word)
-			slw.ClassifiedWords[hash] = sameHashWordList
+			slw.SameHashedWords[hash] = sameHashWordList
 		}
 
-		db.WordLength[wordLength] = slw
+		db.SameLengthWords[wordLength] = slw
 	}
 
 	//Eliminating double words, because case is ignored
-	for wordLength, slw := range db.WordLength {
-		for hash, words := range slw.ClassifiedWords {
+	for wordLength, slw := range db.SameLengthWords {
+		for hash, words := range slw.SameHashedWords {
 			for i := 0; i < len(words); i++ {
 				for j := 0; j < len(words); j++ {
 					if i == j {
@@ -136,24 +136,24 @@ func characterizeByHash(wordLengthMap map[int][]string) Database {
 					}
 				}
 			}
-			slw.ClassifiedWords[hash] = words
+			slw.SameHashedWords[hash] = words
 		}
-		db.WordLength[wordLength] = slw
+		db.SameLengthWords[wordLength] = slw
 	}
 
 	return db
 }
 
 func compareDatabases(mainDatabase Database, preDatabase Database) Database {
-	for length, preSlw := range preDatabase.WordLength {
+	for length, preSlw := range preDatabase.SameLengthWords {
 
-		mainSlw, ok := mainDatabase.WordLength[length]
+		mainSlw, ok := mainDatabase.SameLengthWords[length]
 		if !ok {
-			mainDatabase.WordLength[length] = preSlw
+			mainDatabase.SameLengthWords[length] = preSlw
 			continue //no words with length 'length' contained in old database
 		}
 
-		mainDatabase.WordLength[length] = compareHashedWordMaps(mainSlw, preSlw)
+		mainDatabase.SameLengthWords[length] = compareHashedWordMaps(mainSlw, preSlw)
 	}
 
 	return mainDatabase
@@ -162,10 +162,10 @@ func compareDatabases(mainDatabase Database, preDatabase Database) Database {
 var totalNewWords int
 
 func compareHashedWordMaps(mainSlw SameLengthWord, preSlw SameLengthWord) SameLengthWord {
-	for hash, sameHashWordList := range preSlw.ClassifiedWords {
-		mainSameHashedWordList, ok := mainSlw.ClassifiedWords[hash]
+	for hash, sameHashWordList := range preSlw.SameHashedWords {
+		mainSameHashedWordList, ok := mainSlw.SameHashedWords[hash]
 		if !ok {
-			mainSlw.ClassifiedWords[hash] = sameHashWordList
+			mainSlw.SameHashedWords[hash] = sameHashWordList
 			continue //no words with hash 'hash' contained in old database
 		}
 
@@ -174,7 +174,7 @@ func compareHashedWordMaps(mainSlw SameLengthWord, preSlw SameLengthWord) SameLe
 		totalNewWords = totalNewWords + len(newWords) //needed for logging
 
 		mainSameHashedWordList = append(mainSameHashedWordList, newWords...)
-		mainSlw.ClassifiedWords[hash] = mainSameHashedWordList
+		mainSlw.SameHashedWords[hash] = mainSameHashedWordList
 	}
 	return mainSlw
 }
@@ -216,12 +216,12 @@ func deleteWordsFromDatabase(list string) {
 		length := len(word)
 		hash := computeHash(word)
 
-		sameLengthWords, ok := mainDatabase.WordLength[length]
+		sameLengthWords, ok := mainDatabase.SameLengthWords[length]
 		if !ok {
 			//word not in Database
 			continue
 		}
-		hashedWords, ok := sameLengthWords.ClassifiedWords[hash]
+		hashedWords, ok := sameLengthWords.SameHashedWords[hash]
 		if !ok {
 			//word not in Database
 			continue
@@ -240,10 +240,10 @@ func deleteWordsFromDatabase(list string) {
 			break //word Found
 		}
 		if len(hashedWords) == 0 {
-			delete(mainDatabase.WordLength[length].ClassifiedWords, hash)
+			delete(mainDatabase.SameLengthWords[length].SameHashedWords, hash)
 			continue //No need to save an empty map field
 		}
-		mainDatabase.WordLength[length].ClassifiedWords[hash] = hashedWords
+		mainDatabase.SameLengthWords[length].SameHashedWords[hash] = hashedWords
 	}
 	logActions(fmt.Sprintf("From %d words, %d were deleted from the database", len(wordList), deletedWords))
 }

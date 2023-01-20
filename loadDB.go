@@ -14,7 +14,7 @@ func loadDatabase() {
 	noDatabaseFile := errCheck(err, os.IsNotExist)
 	if noDatabaseFile {
 		logActions("No database found, proceeding with empty database")
-		mainDatabase.WordLength = make(map[int]SameLengthWord)
+		mainDatabase.SameLengthWords = make(map[int]SameLengthWord)
 		return
 	}
 
