@@ -170,7 +170,9 @@ func compareHashedWordMaps(mainSlw SameLengthWord, preSlw SameLengthWord) SameLe
 		}
 
 		newWords := compareWordLists(mainSameHashedWordList, sameHashWordList)
-		totalNewWords = totalNewWords + len(newWords)
+
+		totalNewWords = totalNewWords + len(newWords) //needed for logging
+
 		mainSameHashedWordList = append(mainSameHashedWordList, newWords...)
 		mainSlw.ClassifiedWords[hash] = mainSameHashedWordList
 	}
