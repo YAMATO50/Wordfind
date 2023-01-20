@@ -82,23 +82,11 @@ func countWordlength(wordList []string) map[int][]string {
 		}
 
 		wordsWithSameLength := wordLengthMap[length]
-		if containsWord(wordsWithSameLength, word) {
-			continue //Ignore doubled words
-		}
 
 		wordsWithSameLength = append(wordsWithSameLength, word)
 		wordLengthMap[length] = wordsWithSameLength
 	}
 	return wordLengthMap
-}
-
-func containsWord(wordList []string, word string) bool {
-	for _, element := range wordList {
-		if element == word {
-			return true
-		}
-	}
-	return false
 }
 
 func characterizeByHash(wordLengthMap map[int][]string) Database {
