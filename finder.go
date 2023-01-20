@@ -136,6 +136,7 @@ func removeImpossibleWords(characters string, mabyPossibleWords []string) []stri
 	for _, word := range mabyPossibleWords {
 		countetCharacters := countCharacters(word)
 		possible := true
+
 		for character, count := range countetCharacters {
 			if count > countedAvailableCharacters[character] {
 				possible = false
