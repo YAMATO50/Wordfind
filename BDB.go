@@ -111,6 +111,12 @@ func characterizeByHash(wordLengthMap map[int][]string) Database {
 	}
 
 	//Eliminating double words, because case is ignored
+	db = eliminateDoubleWords(db)
+
+	return db
+}
+
+func eliminateDoubleWords(db Database) Database {
 	for wordLength, slw := range db.SameLengthWords {
 		for hash, words := range slw.SameHashedWords {
 			for i := 0; i < len(words); i++ {
