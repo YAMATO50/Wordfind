@@ -106,8 +106,8 @@ func getPossibleHashes(characters string) []uint32 {
 	return possibleHashes
 }
 
-func splitHash(maxHash uint32) (components []uint32) {
-	remainders := toBinaryArray(maxHash)
+func splitHash(availableCharactersHash uint32) (components []uint32) {
+	remainders := toBinaryArray(availableCharactersHash)
 
 	for i, remainder := range remainders {
 		component := uint32(math.Pow(2, float64(i))) * remainder
