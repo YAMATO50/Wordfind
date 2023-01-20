@@ -226,8 +226,8 @@ func deleteWordsFromDatabase(list string) {
 			//word not in Database
 			continue
 		}
-		for idx, classifiedWord := range hashedWords {
-			if classifiedWord != word {
+		for idx, hashedWordFromDatabase := range hashedWords {
+			if hashedWordFromDatabase != word {
 				continue
 			}
 
