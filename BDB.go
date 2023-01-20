@@ -122,9 +122,11 @@ func eliminateDoubleWords(db Database) Database {
 
 			for i := 0; i < len(words); i++ {
 				for j := 0; j < len(words); j++ {
+
 					if i == j {
-						continue
+						continue //Word at the same index is always the same
 					}
+
 					if words[i] == words[j] {
 						words = deleteFromSlice(words, j)
 					}
