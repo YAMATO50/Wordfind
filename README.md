@@ -31,6 +31,6 @@ All commands can be run with -v option to get a detailed output.
 
 ## License
 
-The programm is licensed under the GLPv3.
+The programm is licensed under the GPLv3.
 
 The wordlist used to generate the Database originates from [davidak/wortliste](https://github.com/davidak/wortliste).
