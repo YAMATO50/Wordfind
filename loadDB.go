@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"os"
 )
 
@@ -10,7 +9,7 @@ func loadDatabase() {
 
 	logActions("Loading database")
 
-	jsonData, err := ioutil.ReadFile("wordListDatabase.json")
+	jsonData, err := os.ReadFile("wordListDatabase.json")
 	noDatabaseFile := errCheck(err, os.IsNotExist)
 	if noDatabaseFile {
 		logActions("No database found, proceeding with empty database")
@@ -28,7 +27,7 @@ func saveDatabase() {
 	jsonData, err := json.Marshal(mainDatabase)
 	errCheck(err, isNoErr)
 
-	err = ioutil.WriteFile("wordListDatabase.json", jsonData, 0664)
+	err = os.WriteFile("wordListDatabase.json", jsonData, 0664)
 	errCheck(err, isNoErr)
 	logActions("Successfully saved database")
 }

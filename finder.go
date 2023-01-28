@@ -11,7 +11,7 @@ import (
 
 func findWords() {
 	reader = bufio.NewReader(os.Stdin)
-	for true {
+	for {
 		fmt.Print("Wordfind>")
 		input := readLine()
 		switch strings.ToLower(input) {
@@ -39,7 +39,7 @@ func find() {
 		return
 	}
 
-	if length <= 0 || length > len(characters) {
+	if length <= 0 || length > getWordLength(characters) {
 		fmt.Println("Invalid length!")
 		return
 	}
