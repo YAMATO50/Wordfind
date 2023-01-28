@@ -11,7 +11,7 @@ import (
 
 func findWords() {
 	reader = bufio.NewReader(os.Stdin)
-	for true {
+	for {
 		fmt.Print("Wordfind>")
 		input := readLine()
 		switch strings.ToLower(input) {
