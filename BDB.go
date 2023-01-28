@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -56,11 +55,7 @@ func errCheck(err error, isErrFunc func(error) bool) bool {
 }
 
 func txtToWordList(filename string) []string {
-	file, err := os.Open(filename)
-	errCheck(err, isNoErr)
-	defer file.Close()
-
-	fileContent, err := ioutil.ReadAll(file)
+	fileContent, err := os.ReadFile(filename)
 	errCheck(err, isNoErr)
 
 	words := strings.ReplaceAll(string(fileContent), " ", "\n")
