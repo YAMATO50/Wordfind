@@ -76,7 +76,7 @@ func countWordlength(wordList []string) map[int][]string {
 	wordLengthMap := make(map[int][]string)
 
 	for _, word := range wordList {
-		length := len(word)
+		length := getWordLength(word)
 		if length == 0 {
 			continue //Ignore empty strings
 		}
@@ -215,7 +215,7 @@ func deleteWordsFromDatabase(list string) {
 	wordList = wordListToLower(wordList)
 
 	for _, word := range wordList {
-		length := len(word)
+		length := getWordLength(word)
 		hash := computeHash(word)
 
 		sameLengthWords, ok := mainDatabase.SameLengthWords[length]
@@ -246,4 +246,12 @@ func deleteWordsFromDatabase(list string) {
 		mainDatabase.SameLengthWords[length].SameHashedWords[hash] = hashedWords
 	}
 	logActions(fmt.Sprintf("From %d words, %d were deleted from the database", len(wordList), deletedWords))
+}
+
+func getWordLength(word string) int {
+	len := 0
+	for range(word) { //range(string) ranges through runes. ä is 2 bytes long, but only 1 rune
+		len++
+	}
+	return len
 }

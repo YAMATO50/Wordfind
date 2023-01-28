@@ -39,7 +39,7 @@ func find() {
 		return
 	}
 
-	if length <= 0 || length > len(characters) {
+	if length <= 0 || length > getWordLength(characters) {
 		fmt.Println("Invalid length!")
 		return
 	}
